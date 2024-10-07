@@ -1,3 +1,4 @@
+from googletrans import Translator
 import telebot
 import time
 import requests
@@ -5,14 +6,19 @@ from bs4 import BeautifulSoup
 
 
 def get_weather(city):
-    url = "https://www.google.com/search?q=" + "weather" + city
+    city = city[0].upper() + city[1:].lower()
+
+    translator = Translator()
+    translation = translator.translate(city, dest="en").text
+    url = "https://www.google.com/search?q=" + "weather" + translation
     html = requests.get(url).content
 
     soup = BeautifulSoup(html, 'html.parser')
 
-    res = soup.find('div', attrs={'class': 'BNeawe tAd8D AP7Wnd'}).text
+    temp = soup.find('div', attrs={'class': 'BNeawe iBp4i AP7Wnd'}).text
+    str_ = soup.find('div', attrs={'class': 'BNeawe tAd8D AP7Wnd'}).text
 
-    return '.'.join(res.split('.')[:5]), soup.find('div', attrs={'class': 'BNeawe s3v9rd AP7Wnd'}).text
+    return temp, str_
 
 
 token = "7500190044:AAEjms7teDUN-OeYR5IGAZls5y6DeALhrw8"
@@ -20,7 +26,6 @@ token = "7500190044:AAEjms7teDUN-OeYR5IGAZls5y6DeALhrw8"
 bot = telebot.TeleBot(token)
 cities = {}
 current_operation = {}
-
 
 @bot.message_handler(commands=['start'])
 def start(msg):
