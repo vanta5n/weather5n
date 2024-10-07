@@ -21,6 +21,7 @@ bot = telebot.TeleBot(token)
 cities = {}
 current_operation = {}
 
+
 @bot.message_handler(commands=['start'])
 def start(msg):
     bot.send_message(msg.chat.id, "пожалуйста, укажите Ваш населенный пункт с помощью /set_city и включите функцию погоды с помощью /run")
